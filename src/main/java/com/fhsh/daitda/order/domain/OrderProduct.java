@@ -6,7 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public record OrderProduct(
+record OrderProduct(
 	@Column(name = "product_id_snapshot", nullable = false)
 	UUID productId,
 	@Column(name = "product_name_snapshot", nullable = false)

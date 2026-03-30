@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "p_order")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
-
 	@Id
 	private UUID orderId;
 	private UUID hubId;
@@ -38,5 +37,21 @@ public class Order {
 	public void addOrderItem(OrderItem item) {
 		orderItems.add(item);
 		item.setOrder(this);  // 양쪽 동시 세팅
+	}
+
+	// Order 와 OrderItem 저장 확인 위해 간단히, 추후 수정 예정
+	public static Order create(List<OrderItemInfo> itemInfos) {
+		Order order = new Order();
+		order.orderId = UUID.randomUUID();
+
+		order.orderStatus = OrderStatus.CREATED;
+
+		for (OrderItemInfo info : itemInfos) {
+			OrderItem item = OrderItem.create(
+				new OrderProduct(info.productId(), info.productName(), info.quantity())
+			);
+			order.addOrderItem(item);
+		}
+		return order;
 	}
 }

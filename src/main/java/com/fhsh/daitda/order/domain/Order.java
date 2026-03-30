@@ -27,7 +27,8 @@ public class Order {
 	private UUID ordererId;
 	private UUID deliveryId;
 
-	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	// TODO: CascadeType.MERGE 대신 다른 방안 생각
+	@OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
 	private List<OrderItem> orderItems = new ArrayList<>();
 
 	private LocalDateTime deadlineAt;

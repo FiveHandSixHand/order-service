@@ -1,12 +1,13 @@
-package com.fhsh.daitda.order.infrastructure;
+package com.fhsh.daitda.order.infrastructure.infrastructure;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
-import com.fhsh.daitda.order.domain.Order;
-import com.fhsh.daitda.order.domain.OrderRepository;
+import com.fhsh.daitda.order.domain.entity.Order;
+import com.fhsh.daitda.order.domain.repository.OrderRepository;
+import com.fhsh.daitda.order.infrastructure.infrastructure.repository.OrderJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 

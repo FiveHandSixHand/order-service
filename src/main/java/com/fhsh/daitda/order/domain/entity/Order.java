@@ -1,10 +1,12 @@
-package com.fhsh.daitda.order.domain;
+package com.fhsh.daitda.order.domain.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fhsh.daitda.order.application.command.OrderItemCommand;
+import com.fhsh.daitda.order.domain.enums.OrderStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,12 +48,12 @@ public class Order {
 	}
 
 	// Order 와 OrderItem 저장 확인 위해 간단히, 추후 수정 예정
-	public static Order create(List<OrderItemInfo> itemInfos) {
+	public static Order create(List<OrderItemCommand> itemInfos) {
 		Order order = new Order();
 
 		order.orderStatus = OrderStatus.CREATED;
 
-		for (OrderItemInfo info : itemInfos) {
+		for (OrderItemCommand info : itemInfos) {
 			OrderItem item = OrderItem.create(
 				new OrderProduct(info.productId(), info.productName(), info.quantity())
 			);

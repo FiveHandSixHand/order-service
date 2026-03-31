@@ -1,4 +1,4 @@
-package com.fhsh.daitda.order.domain;
+package com.fhsh.daitda.order.domain.entity;
 
 import java.util.UUID;
 

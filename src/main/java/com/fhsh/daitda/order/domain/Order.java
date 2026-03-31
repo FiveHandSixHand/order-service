@@ -10,6 +10,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
 	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID orderId;
 	private UUID hubId;
 	private UUID supplierCompanyId;
@@ -29,8 +32,7 @@ public class Order {
 	private UUID ordererId;
 	private UUID deliveryId;
 
-	// TODO: CascadeType.MERGE 대신 다른 방안 생각
-	@OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<OrderItem> orderItems = new ArrayList<>();
 
 	private LocalDateTime deadlineAt;
@@ -46,7 +48,6 @@ public class Order {
 	// Order 와 OrderItem 저장 확인 위해 간단히, 추후 수정 예정
 	public static Order create(List<OrderItemInfo> itemInfos) {
 		Order order = new Order();
-		order.orderId = UUID.randomUUID();
 
 		order.orderStatus = OrderStatus.CREATED;
 

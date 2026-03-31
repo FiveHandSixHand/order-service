@@ -8,6 +8,8 @@ import java.util.UUID;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -32,6 +34,7 @@ public class Order {
 	private List<OrderItem> orderItems = new ArrayList<>();
 
 	private LocalDateTime deadlineAt;
+	@Enumerated(EnumType.STRING)
 	private OrderStatus orderStatus;
 	private String requestMessage;
 

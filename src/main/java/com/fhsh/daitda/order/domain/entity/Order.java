@@ -19,16 +19,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "p_order")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
-	@Id
+	@Getter
 	@GeneratedValue(strategy = GenerationType.UUID)
+	@Id
 	private UUID orderId;
-	private UUID hubId;
 	private UUID supplierCompanyId;
 	private UUID receiverCompanyId;
 	@Column(name = "user_id")

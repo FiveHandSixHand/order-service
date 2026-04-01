@@ -1,8 +1,8 @@
-package com.fhsh.daitda.order.application.command;
+package com.fhsh.daitda.order.domain.vo;
 
 import java.util.UUID;
 
-public record OrderItemCommand(
+public record OrderItemInfo(
 	UUID productId,
 	String productName,
 	Integer quantity

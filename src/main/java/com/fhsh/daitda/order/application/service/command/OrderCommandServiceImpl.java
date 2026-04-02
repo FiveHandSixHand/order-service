@@ -1,5 +1,7 @@
 package com.fhsh.daitda.order.application.service.command;
 
+import static com.fhsh.daitda.order.application.service.OrderErrorCode.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -82,5 +84,13 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				return new OrderItemInfo(itemCommand.productId(), productName, itemCommand.quantity());
 			}
 		).toList();
+	}
+
+	@Transactional
+	public void deleteOrder(UUID userId, UUID orderId) {
+		Order order = orderRepository.findById(orderId).orElseThrow(
+			() -> new BusinessException(NOT_FOUND_ORDER)
+		);
+		order.deleteOrder(userId);
 	}
 }

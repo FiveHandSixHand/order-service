@@ -97,4 +97,8 @@ public class Order extends BaseUserEntity {
 		this.deliveryId = deliveryId;
 		this.orderStatus = OrderStatus.COMPLETED;
 	}
+
+	public void deleteOrder(UUID ordererId) {
+		super.delete(ordererId.toString());
+	}
 }

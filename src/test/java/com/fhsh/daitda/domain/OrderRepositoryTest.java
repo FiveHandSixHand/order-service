@@ -43,7 +43,7 @@ public class OrderRepositoryTest {
 			prod2, hubInvenId2
 		);
 
-		Order order = Order.create(orderItemInfos, inventoryMap);
+		Order order = Order.create(null, null, null, null, orderItemInfos, inventoryMap);
 
 		Order savedOrder = orderRepository.save(order);
 		UUID orderId = (UUID) ReflectionTestUtils.getField(savedOrder, "orderId");

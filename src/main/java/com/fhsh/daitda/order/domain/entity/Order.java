@@ -1,5 +1,6 @@
 package com.fhsh.daitda.order.domain.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -52,9 +54,28 @@ public class Order extends BaseUserEntity {
 		item.setOrder(this);  // 양쪽 동시 세팅
 	}
 
+	@Builder
+	private Order(UUID supplierCompanyId, UUID receiverCompanyId, LocalDateTime deadlineAt, String requestMsg) {
+		this.supplierCompanyId = supplierCompanyId;
+		this.receiverCompanyId = receiverCompanyId;
+		this.orderRequest = new OrderRequest(deadlineAt, requestMsg);
+
+	}
+
 	// Order 와 OrderItem 저장 확인 위해 간단히, 추후 수정 예정
-	public static Order create(List<OrderItemInfo> itemInfos, Map<UUID, UUID> hubInventoryInfos) {
-		Order order = new Order();
+	public static Order create(UUID supplierCompanyId,
+		UUID receiverCompanyId,
+		LocalDateTime deadlineAt,
+		String requestMsg,
+		List<OrderItemInfo> itemInfos,
+		Map<UUID, UUID> hubInventoryInfos) {
+
+		Order order = Order.builder()
+			.supplierCompanyId(supplierCompanyId)
+			.receiverCompanyId(receiverCompanyId)
+			.deadlineAt(deadlineAt)
+			.requestMsg(requestMsg)
+			.build();
 
 		order.orderStatus = OrderStatus.CREATED;
 

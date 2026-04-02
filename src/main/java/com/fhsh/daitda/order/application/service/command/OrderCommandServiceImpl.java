@@ -41,7 +41,12 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
 		Map<UUID, UUID> inventoryInfos = hubInventoryClient.decreaseHubInventory(supplierCompanyId,
 			orderCreateCommand.orderItems());
-		Order order = Order.create(itemInfos, inventoryInfos);
+		Order order = Order.create(supplierCompanyId,
+			receiverCompanyId,
+			orderCreateCommand.deadlineAt(),
+			orderCreateCommand.requestMessage(),
+			itemInfos,
+			inventoryInfos);
 
 		UUID deliveryId = null;
 		try {

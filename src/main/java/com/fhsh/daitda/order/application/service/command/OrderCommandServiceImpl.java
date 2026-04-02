@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.application.client.CompanyClient;
 import com.fhsh.daitda.order.application.client.DeliveryClient;
 import com.fhsh.daitda.order.application.client.HubInventoryClient;
@@ -13,6 +14,7 @@ import com.fhsh.daitda.order.application.command.OrderCreateCommand;
 import com.fhsh.daitda.order.application.command.OrderItemCommand;
 import com.fhsh.daitda.order.application.command.RestoreHubInventoryCommand;
 import com.fhsh.daitda.order.application.result.OrderCreateResult;
+import com.fhsh.daitda.order.application.service.OrderErrorCode;
 import com.fhsh.daitda.order.domain.entity.Order;
 import com.fhsh.daitda.order.domain.repository.OrderRepository;
 import com.fhsh.daitda.order.domain.vo.OrderItemInfo;
@@ -57,6 +59,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				.map(item -> new RestoreHubInventoryCommand(item.getHubInventoryId(), item.getQuantity()))
 				.toList();
 			hubInventoryClient.restoreHubInventory(hubInventoryCommands);
+			throw new BusinessException(OrderErrorCode.DELIVERY_SERVICE_ERROR);
 		}
 		order.complete(deliveryId);
 

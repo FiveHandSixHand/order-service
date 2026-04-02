@@ -1,11 +1,14 @@
 spring:
   application:
-    name: daitda
-server:
-  port: ${PORT} #각자 port
-
-eureka:
-  client:
-    service-url:
-      defaultZone: ${EUREKA_SERVER_URL}
-
+    name: order-service
+  profiles:
+    active: ${PROFILE}
+  config:
+    # 1순위: 직접 주소로 Config Server 접속 시도 (optional이므로 실패해도 다음 단계 진행)
+    import: "optional:configserver:http://localhost:8888"
+  cloud:
+    config:
+      discovery:
+        # 2순위: 직접 접속 실패 시 Eureka를 통해 'config-server'를 찾음
+        enabled: true
+        service-id: config-server

@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class CompanyAdapter implements CompanyClient{
-	@Autowired
 	private final CompanyFeignClient companyFeignClient;
 
 	@Override

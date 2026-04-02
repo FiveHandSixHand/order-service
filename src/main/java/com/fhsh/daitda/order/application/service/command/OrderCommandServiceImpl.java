@@ -26,13 +26,13 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		List<UUID> productIds = orderCreateCommand.orderItems().stream()
 			.map(OrderItemCommand::productId)
 			.toList();
-		List<OrderItemInfo> itemInfos = createOrderItemInfo(orderCreateCommand.orderItems(), productIds);
+		List<OrderItemInfo> itemInfos = createOrderItemInfo(orderCreateCommand.orderItems(), productIds, orderCreateCommand.supplierCompanyId());
 
 		Order order = Order.create(itemInfos);
 
 		return OrderCreateResult.from(order);
 	}
-	private List<OrderItemInfo> createOrderItemInfo(List<OrderItemCommand> orderItemCommands, List<UUID> productIds) {
+	private List<OrderItemInfo> createOrderItemInfo(List<OrderItemCommand> orderItemCommands, List<UUID> productIds, UUID supplierCompanyId) {
 		Map<UUID, String> productNames = companyClient.getProductNames(supplierCompanyId, productIds);
 
 		return orderItemCommands.stream().map(

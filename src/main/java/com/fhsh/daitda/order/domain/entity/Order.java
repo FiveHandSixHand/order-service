@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fhsh.daitda.order.application.command.OrderItemCommand;
+import com.fhsh.daitda.domain.BaseUserEntity;
 import com.fhsh.daitda.order.domain.enums.OrderStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "p_order")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order {
+public class Order extends BaseUserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID orderId;

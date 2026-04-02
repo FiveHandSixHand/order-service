@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class OrderCommandServiceImpl implements OrderCommandService {
+	private final UUID userId; //실제 userID오면 삭제 예정
 	private final OrderRepository orderRepository;
 
 	private final CompanyClient companyClient;
@@ -47,6 +48,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 			orderCreateCommand.orderItems());
 		Order order = Order.create(supplierCompanyId,
 			receiverCompanyId,
+			userId,
 			orderCreateCommand.deadlineAt(),
 			orderCreateCommand.requestMessage(),
 			itemInfos,

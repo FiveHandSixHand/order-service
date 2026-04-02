@@ -55,16 +55,19 @@ public class Order extends BaseUserEntity {
 	}
 
 	@Builder
-	private Order(UUID supplierCompanyId, UUID receiverCompanyId, LocalDateTime deadlineAt, String requestMsg) {
+	private Order(UUID supplierCompanyId, UUID receiverCompanyId, UUID ordererId, LocalDateTime deadlineAt, String requestMsg) {
 		this.supplierCompanyId = supplierCompanyId;
 		this.receiverCompanyId = receiverCompanyId;
+		this.ordererId = ordererId;
 		this.orderRequest = new OrderRequest(deadlineAt, requestMsg);
 
 	}
 
 	// Order 와 OrderItem 저장 확인 위해 간단히, 추후 수정 예정
-	public static Order create(UUID supplierCompanyId,
+	public static Order create(
+		UUID supplierCompanyId,
 		UUID receiverCompanyId,
+		UUID ordererId,
 		LocalDateTime deadlineAt,
 		String requestMsg,
 		List<OrderItemInfo> itemInfos,
@@ -73,6 +76,7 @@ public class Order extends BaseUserEntity {
 		Order order = Order.builder()
 			.supplierCompanyId(supplierCompanyId)
 			.receiverCompanyId(receiverCompanyId)
+			.ordererId(ordererId)
 			.deadlineAt(deadlineAt)
 			.requestMsg(requestMsg)
 			.build();

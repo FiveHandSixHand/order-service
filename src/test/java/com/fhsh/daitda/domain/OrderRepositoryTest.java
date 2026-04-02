@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fhsh.daitda.order.domain.entity.Order;
-import com.fhsh.daitda.order.application.command.OrderItemCommand;
+import com.fhsh.daitda.order.domain.vo.OrderItemInfo;
 import com.fhsh.daitda.order.domain.repository.OrderRepository;
 import com.fhsh.daitda.order.infrastructure.infrastructure.OrderRepositoryImpl;
 
@@ -29,9 +29,9 @@ public class OrderRepositoryTest {
 	@Test
 	@DisplayName("Record 기반 OrderProduct를 포함한 주문 저장 및 조회 테스트")
 	public void dbTest() {
-		List<OrderItemCommand> orderItemInfos = List.of(
-			new OrderItemCommand(UUID.randomUUID(),  "오징어", 50),
-			new OrderItemCommand(UUID.randomUUID(),  "갈치", 26)
+		List<OrderItemInfo> orderItemInfos = List.of(
+			new OrderItemInfo(UUID.randomUUID(),  "오징어", 50),
+			new OrderItemInfo(UUID.randomUUID(),  "갈치", 26)
 		);
 
 		Order order = Order.create(orderItemInfos);

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.application.client.CompanyClient;
@@ -31,6 +32,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	private final HubInventoryClient hubInventoryClient;
 	private final DeliveryClient deliveryClient;
 
+	@Transactional
 	public OrderCreateResult createOrder(OrderCreateCommand orderCreateCommand) {
 		List<UUID> productIds = orderCreateCommand.orderItems().stream()
 			.map(OrderItemCommand::productId)
@@ -50,6 +52,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 			itemInfos,
 			inventoryInfos);
 
+		orderRepository.save(order);
+
 		UUID deliveryId = null;
 		try {
 			deliveryId = deliveryClient.createDelivery(order.getOrderId(), supplierCompanyId, receiverCompanyId);
@@ -62,8 +66,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 			throw new BusinessException(OrderErrorCode.DELIVERY_SERVICE_ERROR);
 		}
 		order.complete(deliveryId);
-
-		orderRepository.save(order);
 
 		return OrderCreateResult.from(order);
 	}

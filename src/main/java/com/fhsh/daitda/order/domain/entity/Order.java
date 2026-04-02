@@ -38,6 +38,7 @@ public class Order extends BaseUserEntity {
 	private UUID ordererId;
 	private UUID deliveryId;
 
+	@Getter
 	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<OrderItem> orderItems = new ArrayList<>();
 

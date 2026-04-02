@@ -10,12 +10,16 @@ public class HubInventoryRequestDto {
 	) {}
 
 	public record Restoration(
-		UUID hubInventoryid,
-		Integer quantity
+		List<RestoreItem> restoreItems
 	) {}
 
-	public record Item(
+	protected record Item(
 		UUID productId,
+		int quantity
+	) {}
+
+	protected record RestoreItem(
+		UUID hubInventoryid,
 		int quantity
 	) {}
 }

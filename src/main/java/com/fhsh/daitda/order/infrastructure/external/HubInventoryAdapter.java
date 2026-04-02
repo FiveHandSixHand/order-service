@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.fhsh.daitda.order.application.client.HubInventoryClient;
 import com.fhsh.daitda.order.application.command.OrderItemCommand;
+import com.fhsh.daitda.order.application.command.RestoreHubInventoryCommand;
 import com.fhsh.daitda.response.CommonResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -37,10 +38,15 @@ public class HubInventoryAdapter implements HubInventoryClient {
 	}
 
 	@Override
-	public void restoreHubInventory(UUID hubInventoryId, int quantity) {
+	public void restoreHubInventory(List<RestoreHubInventoryCommand> hubInventoryCommands) {
+		List<HubInventoryRequestDto.RestoreItem> restoreItems = hubInventoryCommands.stream().map(
+			command -> new HubInventoryRequestDto.RestoreItem(
+				command.hubInventoryId(),
+				command.quantity()
+			)).
+			toList();
 		HubInventoryRequestDto.Restoration hubInventoryDto = new HubInventoryRequestDto.Restoration(
-			hubInventoryId,
-			quantity
+			restoreItems
 		);
 		hubInventoryFeignClient.restoreHubInventory(hubInventoryDto);
 	}

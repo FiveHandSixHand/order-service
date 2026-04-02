@@ -28,7 +28,7 @@ public class OrderItem extends BaseUserEntity {
 	@Embedded
 	private OrderProduct orderProduct;
 
-	static OrderItem create(OrderProduct product) {
+	static OrderItem create(UUID hubInventoryId, OrderProduct product) {
 		OrderItem item = new OrderItem();
 		item.orderProduct = product;
 		return item;

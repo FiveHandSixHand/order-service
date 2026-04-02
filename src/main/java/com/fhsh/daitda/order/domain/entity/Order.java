@@ -1,13 +1,14 @@
 package com.fhsh.daitda.order.domain.entity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import com.fhsh.daitda.domain.BaseUserEntity;
-import com.fhsh.daitda.order.domain.vo.OrderItemInfo;
 import com.fhsh.daitda.order.domain.enums.OrderStatus;
+import com.fhsh.daitda.order.domain.vo.OrderItemInfo;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -51,17 +52,23 @@ public class Order extends BaseUserEntity {
 	}
 
 	// Order 와 OrderItem 저장 확인 위해 간단히, 추후 수정 예정
-	public static Order create(List<OrderItemInfo> itemInfos) {
+	public static Order create(List<OrderItemInfo> itemInfos, Map<UUID, UUID> hubInventoryInfos) {
 		Order order = new Order();
 
 		order.orderStatus = OrderStatus.CREATED;
 
 		for (OrderItemInfo info : itemInfos) {
 			OrderItem item = OrderItem.create(
+				hubInventoryInfos.get(info.productId()),
 				new OrderProduct(info.productId(), info.productName(), info.quantity())
 			);
 			order.addOrderItem(item);
 		}
 		return order;
+	}
+
+	public void complete(UUID deliveryId) {
+		this.deliveryId = deliveryId;
+		this.orderStatus = OrderStatus.COMPLETED;
 	}
 }

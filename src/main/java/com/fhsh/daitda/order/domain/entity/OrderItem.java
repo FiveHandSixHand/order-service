@@ -2,7 +2,7 @@ package com.fhsh.daitda.order.domain.entity;
 
 import java.util.UUID;
 
-import com.fhsh.daitda.order.domain.entity.OrderProduct;
+import com.fhsh.daitda.domain.BaseUserEntity;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class OrderItem {
+public class OrderItem extends BaseUserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID orderItemId;

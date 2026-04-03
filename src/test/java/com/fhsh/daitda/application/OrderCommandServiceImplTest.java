@@ -47,6 +47,8 @@ class OrderCommandServiceImplTest {
 
 	@Nested
 	public class CreateOrderTest {
+		private UUID userId = UUID.randomUUID();
+
 		@Test
 		@DisplayName("모든 외부 서비스가 정상일 때 주문 생성에 성공해야 한다")
 		void createOrder_Success() {
@@ -73,7 +75,7 @@ class OrderCommandServiceImplTest {
 				.willReturn(mockDeliveryId);
 
 			// when
-			OrderCreateResult result = orderService.createOrder(command);
+			OrderCreateResult result = orderService.createOrder(userId, command);
 
 			// then
 			assertNotNull(result);
@@ -105,7 +107,7 @@ class OrderCommandServiceImplTest {
 			// when & then
 			// 1. assertThrows의 결과로 예외 객체를 받습니다.
 			BusinessException exception = assertThrows(BusinessException.class, () -> {
-				orderService.createOrder(command);
+				orderService.createOrder(userId, command);
 			});
 
 			// 2. 예외 내부의 에러 코드가 내가 설정한 것과 같은지 검증합니다.

@@ -8,6 +8,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,13 +34,16 @@ public class OrderController {
 	private final OrderQueryService orderQueryService;
 
 	@PostMapping
-	public ResponseEntity<CommonResponse> createOrder(@RequestBody OrderCreateCommand orderCreateCommand) {
-		OrderCreateResult orderCreateResult = orderCommandService.createOrder(orderCreateCommand);
+	public ResponseEntity<CommonResponse<OrderCreateResult>> createOrder(
+		@RequestHeader("X-User-Id") UUID userId,
+		@RequestBody OrderCreateCommand orderCreateCommand
+	) {
+		OrderCreateResult orderCreateResult = orderCommandService.createOrder(userId, orderCreateCommand);
 		return ResponseEntity.ok(CommonResponse.success(orderCreateResult));
 	}
 
 	@GetMapping
-	public ResponseEntity<CommonResponse> getOrders(
+	public ResponseEntity<CommonResponse<GetOrdersResult>> getOrders(
 		@RequestHeader("X-User-Id") UUID userId,
 		@RequestHeader("X-User-Role") String auth,
 		@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -48,13 +52,22 @@ public class OrderController {
 	}
 
 	@GetMapping("/{orderId}")
-	public ResponseEntity<CommonResponse> getOrder(
+	public ResponseEntity<CommonResponse<GetOrderDetailsResult>> getOrder(
 		@RequestHeader("X-User-Id") UUID userId,
 		@RequestHeader("X-User-Role") String auth,
 		@PathVariable UUID orderId
 	) {
 		GetOrderDetailsResult result = orderQueryService.getOrder(orderId, userId, auth);
 		return ResponseEntity.ok(CommonResponse.success(result));
+	}
+
+	@PatchMapping("/{orderId}")
+	public ResponseEntity<CommonResponse> cancelOrder(
+		@RequestHeader("X-User-Id") UUID userId,
+		@PathVariable UUID orderId
+	) {
+		orderCommandService.cancelOrder(userId, orderId);
+		return ResponseEntity.ok(CommonResponse.success());
 	}
 
 	@DeleteMapping("/{orderId}")

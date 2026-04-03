@@ -116,6 +116,14 @@ public class Order extends BaseUserEntity {
 		return true;
 	}
 
+	public boolean checkStatus() {
+		return this.orderStatus.validateCanCancel();
+	}
+
+	public void cancel() {
+		this.orderStatus = OrderStatus.CANCELLED;
+	}
+
 	public List<OrderItemInfo> getOrderItemInfo() {
 		return this.orderItems.stream().map(
 			item -> item.getOrderItemInfo()

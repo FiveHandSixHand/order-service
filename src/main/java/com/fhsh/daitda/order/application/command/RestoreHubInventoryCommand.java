@@ -2,9 +2,8 @@ package com.fhsh.daitda.order.application.command;
 
 import java.util.UUID;
 
-
-public record OrderItemCommand(
-	UUID productId,
+public record RestoreHubInventoryCommand(
+	UUID hubInventoryId,
 	int quantity
 ) {
 }

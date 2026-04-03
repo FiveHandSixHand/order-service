@@ -4,35 +4,76 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.application.client.CompanyClient;
+import com.fhsh.daitda.order.application.client.DeliveryClient;
+import com.fhsh.daitda.order.application.client.HubInventoryClient;
 import com.fhsh.daitda.order.application.command.OrderCreateCommand;
 import com.fhsh.daitda.order.application.command.OrderItemCommand;
+import com.fhsh.daitda.order.application.command.RestoreHubInventoryCommand;
 import com.fhsh.daitda.order.application.result.OrderCreateResult;
+import com.fhsh.daitda.order.application.service.OrderErrorCode;
 import com.fhsh.daitda.order.domain.entity.Order;
+import com.fhsh.daitda.order.domain.repository.OrderRepository;
 import com.fhsh.daitda.order.domain.vo.OrderItemInfo;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class OrderCommandServiceImpl implements OrderCommandService {
-	@Autowired
-	private final CompanyClient companyClient;
+	private final UUID userId; //실제 userID오면 삭제 예정
+	private final OrderRepository orderRepository;
 
+	private final CompanyClient companyClient;
+	private final HubInventoryClient hubInventoryClient;
+	private final DeliveryClient deliveryClient;
+
+	@Transactional
 	public OrderCreateResult createOrder(OrderCreateCommand orderCreateCommand) {
 		List<UUID> productIds = orderCreateCommand.orderItems().stream()
 			.map(OrderItemCommand::productId)
 			.toList();
-		List<OrderItemInfo> itemInfos = createOrderItemInfo(orderCreateCommand.orderItems(), productIds, orderCreateCommand.supplierCompanyId());
+		List<OrderItemInfo> itemInfos = createOrderItemInfo(orderCreateCommand.orderItems(), productIds,
+			orderCreateCommand.supplierCompanyId());
 
-		Order order = Order.create(itemInfos);
+		UUID supplierCompanyId = orderCreateCommand.supplierCompanyId();
+		UUID receiverCompanyId = orderCreateCommand.receiverCompanyId();
+
+		Map<UUID, UUID> inventoryInfos = hubInventoryClient.decreaseHubInventory(supplierCompanyId,
+			orderCreateCommand.orderItems());
+		Order order = Order.create(supplierCompanyId,
+			receiverCompanyId,
+			userId,
+			orderCreateCommand.deadlineAt(),
+			orderCreateCommand.requestMessage(),
+			itemInfos,
+			inventoryInfos);
+
+		orderRepository.save(order);
+
+		UUID deliveryId = null;
+		try {
+			deliveryId = deliveryClient.createDelivery(order.getOrderId(), supplierCompanyId, receiverCompanyId);
+		} catch (FeignException e) {
+			List<RestoreHubInventoryCommand> hubInventoryCommands = order.getOrderItems()
+				.stream()
+				.map(item -> new RestoreHubInventoryCommand(item.getHubInventoryId(), item.getQuantity()))
+				.toList();
+			hubInventoryClient.restoreHubInventory(hubInventoryCommands);
+			throw new BusinessException(OrderErrorCode.DELIVERY_SERVICE_ERROR);
+		}
+		order.complete(deliveryId);
 
 		return OrderCreateResult.from(order);
 	}
-	private List<OrderItemInfo> createOrderItemInfo(List<OrderItemCommand> orderItemCommands, List<UUID> productIds, UUID supplierCompanyId) {
+
+	private List<OrderItemInfo> createOrderItemInfo(List<OrderItemCommand> orderItemCommands, List<UUID> productIds,
+		UUID supplierCompanyId) {
 		Map<UUID, String> productNames = companyClient.getProductNames(supplierCompanyId, productIds);
 
 		return orderItemCommands.stream().map(

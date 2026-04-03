@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
 
 @Entity
 public class OrderItem extends BaseUserEntity {
@@ -23,12 +24,13 @@ public class OrderItem extends BaseUserEntity {
 	@JoinColumn(name = "order_id", nullable = false)
 	private Order order;
 
+	@Getter
 	private UUID hubInventoryId;
 
 	@Embedded
 	private OrderProduct orderProduct;
 
-	static OrderItem create(OrderProduct product) {
+	static OrderItem create(UUID hubInventoryId, OrderProduct product) {
 		OrderItem item = new OrderItem();
 		item.orderProduct = product;
 		return item;
@@ -36,5 +38,9 @@ public class OrderItem extends BaseUserEntity {
 
 	protected void setOrder(Order order) {
 		this.order = order;
+	}
+
+	public int getQuantity() {
+		return this.orderProduct.quantity();
 	}
 }

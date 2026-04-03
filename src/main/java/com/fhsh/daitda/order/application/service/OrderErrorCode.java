@@ -14,7 +14,8 @@ public enum OrderErrorCode implements ErrorCode {
 	DELIVERY_SERVICE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DELIVERY_SERVICE_ERROR"),
 
 	//NOT FOUND
-	NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "NOT_FOUND_ORDER");
+	NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "NOT_FOUND_ORDER"),
+	NOT_MATCH_ORDERER(HttpStatus.BAD_REQUEST, "NOT_MATCH_ORDERER");
 	private final HttpStatus status;
 	private final String description;
 }

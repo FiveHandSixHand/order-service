@@ -1,5 +1,7 @@
 package com.fhsh.daitda.order.domain.entity;
 
+import static com.fhsh.daitda.order.application.service.OrderErrorCode.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.fhsh.daitda.domain.BaseUserEntity;
+import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.domain.enums.OrderStatus;
 import com.fhsh.daitda.order.domain.vo.OrderItemInfo;
 
@@ -104,5 +107,18 @@ public class Order extends BaseUserEntity {
 
 	public void deleteOrder(UUID ordererId) {
 		super.delete(ordererId.toString());
+	}
+
+	public boolean checkOrderer(UUID userId) {
+		if(this.ordererId != userId) {
+			throw new BusinessException(NOT_MATCH_ORDERER);
+		}
+		return true;
+	}
+
+	public List<OrderItemInfo> getOrderItemInfo() {
+		return this.orderItems.stream().map(
+			item -> item.getOrderItemInfo()
+		).toList();
 	}
 }

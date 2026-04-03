@@ -3,6 +3,7 @@ package com.fhsh.daitda.order.domain.entity;
 import java.util.UUID;
 
 import com.fhsh.daitda.domain.BaseUserEntity;
+import com.fhsh.daitda.order.domain.vo.OrderItemInfo;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -43,5 +44,13 @@ public class OrderItem extends BaseUserEntity {
 
 	public int getQuantity() {
 		return this.orderProduct.quantity();
+	}
+
+	protected OrderItemInfo getOrderItemInfo() {
+		return new OrderItemInfo(
+			this.orderProduct.productId(),
+			this.orderProduct.productName(),
+			this.orderProduct.quantity()
+		);
 	}
 }

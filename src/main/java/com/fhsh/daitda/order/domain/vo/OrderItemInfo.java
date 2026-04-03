@@ -5,5 +5,5 @@ import java.util.UUID;
 public record OrderItemInfo(
 	UUID productId,
 	String productName,
-	Integer quantity
+	int quantity
 ) {}

@@ -1,6 +1,6 @@
 package com.fhsh.daitda.order.application.service.command;
 
-import static com.fhsh.daitda.order.application.service.OrderErrorCode.*;
+import static com.fhsh.daitda.order.domain.exception.OrderErrorCode.*;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ import com.fhsh.daitda.order.application.command.OrderCreateCommand;
 import com.fhsh.daitda.order.application.command.OrderItemCommand;
 import com.fhsh.daitda.order.application.command.RestoreHubInventoryCommand;
 import com.fhsh.daitda.order.application.result.OrderCreateResult;
-import com.fhsh.daitda.order.application.service.OrderErrorCode;
+import com.fhsh.daitda.order.domain.exception.OrderErrorCode;
 import com.fhsh.daitda.order.domain.entity.Order;
 import com.fhsh.daitda.order.domain.repository.OrderRepository;
 import com.fhsh.daitda.order.domain.vo.OrderItemInfo;

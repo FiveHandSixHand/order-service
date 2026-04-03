@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.application.result.GetOrderDetailsResult;
 import com.fhsh.daitda.order.application.result.GetOrdersResult;
-import com.fhsh.daitda.order.application.service.OrderErrorCode;
+import com.fhsh.daitda.order.domain.exception.OrderErrorCode;
 import com.fhsh.daitda.order.domain.entity.Order;
 import com.fhsh.daitda.order.domain.enums.OrderAccessRole;
 import com.fhsh.daitda.order.domain.repository.OrderRepository;

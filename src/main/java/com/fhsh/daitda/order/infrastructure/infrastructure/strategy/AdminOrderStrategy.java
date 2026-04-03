@@ -19,8 +19,12 @@ public class AdminOrderStrategy implements OrderStrategy {
 
 	@Override
 	public boolean equal(String auth) {
-		return OrderAccessRole.from(auth) == OrderAccessRole.MASTER
-			|| OrderAccessRole.from(auth) == OrderAccessRole.HUB_ADMIN;
+		try {
+			OrderAccessRole role = OrderAccessRole.from(auth);
+			return role == OrderAccessRole.MASTER || role == OrderAccessRole.HUB_ADMIN;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
 	}
 
 	@Override

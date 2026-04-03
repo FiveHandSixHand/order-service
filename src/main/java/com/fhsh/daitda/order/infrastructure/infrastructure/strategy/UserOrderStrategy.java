@@ -19,8 +19,12 @@ public class UserOrderStrategy implements OrderStrategy {
 
 	@Override
 	public boolean equal(String auth) {
-		return OrderAccessRole.from(auth) == OrderAccessRole.COMPANY
-			|| OrderAccessRole.from(auth) == OrderAccessRole.DELIVERY;
+		try {
+			OrderAccessRole role = OrderAccessRole.from(auth);
+			return role == OrderAccessRole.MASTER || role == OrderAccessRole.HUB_ADMIN;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
 	}
 
 	@Override

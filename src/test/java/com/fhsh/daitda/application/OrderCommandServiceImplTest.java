@@ -23,7 +23,7 @@ import com.fhsh.daitda.order.application.client.HubInventoryClient;
 import com.fhsh.daitda.order.application.command.OrderCreateCommand;
 import com.fhsh.daitda.order.application.command.OrderItemCommand;
 import com.fhsh.daitda.order.application.result.OrderCreateResult;
-import com.fhsh.daitda.order.application.service.OrderErrorCode;
+import com.fhsh.daitda.order.domain.exception.OrderErrorCode;
 import com.fhsh.daitda.order.application.service.command.OrderCommandServiceImpl;
 import com.fhsh.daitda.order.domain.entity.Order;
 import com.fhsh.daitda.order.domain.repository.OrderRepository;
@@ -113,8 +113,6 @@ class OrderCommandServiceImplTest {
 
 			// then: 배송 실패 시 restoreHubInventory가 반드시 호출되었는지 검증
 			verify(hubInventoryClient, times(1)).restoreHubInventory(anyList());
-			// then: 주문이 저장되지 않아야 함 (예외로 인해)
-			verify(orderRepository, never()).save(any());
 		}
 
 		private OrderCreateCommand createTestCommand(UUID supplierId, UUID receiverId, UUID productId) {

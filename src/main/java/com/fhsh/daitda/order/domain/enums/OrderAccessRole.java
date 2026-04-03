@@ -12,6 +12,6 @@ public enum OrderAccessRole {
 		return Arrays.stream(values())
 			.filter(role -> role.name().equals(auth))
 			.findFirst()
-			.orElseThrow();
+			.orElseThrow(() -> new IllegalArgumentException("지원하지 않는 권한입니다."));
 	}
 }

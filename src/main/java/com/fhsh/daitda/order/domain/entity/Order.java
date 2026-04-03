@@ -1,6 +1,6 @@
 package com.fhsh.daitda.order.domain.entity;
 
-import static com.fhsh.daitda.order.application.service.OrderErrorCode.*;
+import static com.fhsh.daitda.order.domain.exception.OrderErrorCode.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

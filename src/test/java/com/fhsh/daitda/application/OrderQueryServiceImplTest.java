@@ -22,7 +22,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.application.result.GetOrdersResult;
-import com.fhsh.daitda.order.application.service.OrderErrorCode;
+import com.fhsh.daitda.order.domain.exception.OrderErrorCode;
 import com.fhsh.daitda.order.application.service.query.OrderQueryService;
 import com.fhsh.daitda.order.application.service.query.OrderQueryServiceImpl;
 import com.fhsh.daitda.order.domain.entity.Order;

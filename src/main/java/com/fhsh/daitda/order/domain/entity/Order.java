@@ -110,7 +110,7 @@ public class Order extends BaseUserEntity {
 	}
 
 	public boolean checkOrderer(UUID userId) {
-		if(this.ordererId != userId) {
+		if(!this.ordererId.equals(userId)) {
 			throw new BusinessException(NOT_MATCH_ORDERER);
 		}
 		return true;

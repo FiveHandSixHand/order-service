@@ -3,6 +3,8 @@ package com.fhsh.daitda.order.infrastructure.infrastructure;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
 import com.fhsh.daitda.order.domain.entity.Order;
@@ -24,5 +26,15 @@ public class OrderRepositoryImpl implements OrderRepository {
 	@Override
 	public Optional<Order> findById(UUID orderId) {
 		return orderJpaRepository.findById(orderId);
+	}
+
+	@Override
+	public Slice<Order> findByOrdererId(UUID ordererId, Pageable pageable) {
+		return orderJpaRepository.findByOrdererId(ordererId, pageable);
+	}
+
+	@Override
+	public Slice<Order> findAll(Pageable pageable) {
+		return orderJpaRepository.findAll(pageable);
 	}
 }

@@ -19,7 +19,7 @@ public class HubInventoryRequestDto {
 	) {}
 
 	protected record RestoreItem(
-		UUID hubInventoryid,
+		UUID hubInventoryId,
 		int quantity
 	) {}
 }

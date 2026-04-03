@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
@@ -124,6 +125,31 @@ class OrderCommandServiceImplTest {
 				null,
 				List.of(new OrderItemCommand(productId, 2))
 			);
+		}
+	}
+	
+	@Nested
+	class DeleteOrderTest {
+		@Test
+		@DisplayName("주문 삭제 성공 - 주문이 존재하면 삭제 로직이 수행되어야 한다")
+		void deleteOrder_Success() {
+			// given
+			UUID userId = UUID.randomUUID();
+			UUID orderId = UUID.randomUUID();
+
+			// Mock 객체 생성 (실제 엔티티 기능을 테스트하기 위해 spy를 쓰거나 Mock을 설정)
+			Order mockOrder = mock(Order.class);
+			given(orderRepository.findById(orderId)).willReturn(Optional.of(mockOrder));
+
+			// when
+			orderService.deleteOrder(userId, orderId);
+
+			// then
+			// 1. 레포지토리에서 조회를 시도했는지 확인
+			verify(orderRepository, times(1)).findById(orderId);
+
+			// 2. 엔티티의 deleteOrder 메서드가 해당 userId로 호출되었는지 확인
+			verify(mockOrder, times(1)).deleteOrder(userId);
 		}
 	}
 }

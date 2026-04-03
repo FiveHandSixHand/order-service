@@ -32,6 +32,7 @@ public class OrderItem extends BaseUserEntity {
 
 	static OrderItem create(UUID hubInventoryId, OrderProduct product) {
 		OrderItem item = new OrderItem();
+		item.hubInventoryId = hubInventoryId;
 		item.orderProduct = product;
 		return item;
 	}

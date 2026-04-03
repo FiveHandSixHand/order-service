@@ -34,8 +34,11 @@ public class Order extends BaseUserEntity {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Id
 	private UUID orderId;
+	@Getter
 	private UUID supplierCompanyId;
+	@Getter
 	private UUID receiverCompanyId;
+	@Getter
 	@Column(name = "user_id")
 	private UUID ordererId;
 	private UUID deliveryId;
@@ -44,6 +47,7 @@ public class Order extends BaseUserEntity {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<OrderItem> orderItems = new ArrayList<>();
 
+	@Getter
 	@Enumerated(EnumType.STRING)
 	private OrderStatus orderStatus;
 	@Embedded

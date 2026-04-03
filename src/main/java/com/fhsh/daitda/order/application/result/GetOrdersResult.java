@@ -1,0 +1,19 @@
+package com.fhsh.daitda.order.application.result;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import com.fhsh.daitda.order.domain.enums.OrderStatus;
+
+public record GetOrdersResult(
+	List<OrderResult> results
+) {
+	public record OrderResult(
+		UUID supplierCompanyId, // todo: 이후 name으로 변경
+		UUID receiverCompanyId,
+		UUID orderer, // todo: 이후 name으로 변경
+		OrderStatus status,
+		LocalDateTime orderDate
+	) {}
+}

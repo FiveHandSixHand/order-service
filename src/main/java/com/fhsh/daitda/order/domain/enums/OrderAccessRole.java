@@ -3,7 +3,7 @@ package com.fhsh.daitda.order.domain.enums;
 import java.util.Arrays;
 
 public enum OrderAccessRole {
-	ADMIN,
+	MASTER,
 	HUB_ADMIN,
 	DELIVERY,
 	COMPANY;

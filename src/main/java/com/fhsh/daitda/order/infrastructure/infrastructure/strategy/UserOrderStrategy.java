@@ -21,7 +21,7 @@ public class UserOrderStrategy implements OrderStrategy {
 	public boolean equal(String auth) {
 		try {
 			OrderAccessRole role = OrderAccessRole.from(auth);
-			return role == OrderAccessRole.MASTER || role == OrderAccessRole.HUB_ADMIN;
+			return role == OrderAccessRole.COMPANY || role == OrderAccessRole.DELIVERY;
 		} catch (IllegalArgumentException e) {
 			return false;
 		}

@@ -2,6 +2,8 @@ package com.fhsh.daitda.order.application.client;
 
 import java.util.UUID;
 
+import com.fhsh.daitda.order.application.client.dto.CreateDeliveryClientResponse;
+
 public interface DeliveryClient {
-	UUID createDelivery(UUID orderId, UUID supplierCompanyId, UUID receiverCompanyId);
+	CreateDeliveryClientResponse createDelivery(UUID orderId, UUID supplierCompanyId, UUID receiverCompanyId);
 }

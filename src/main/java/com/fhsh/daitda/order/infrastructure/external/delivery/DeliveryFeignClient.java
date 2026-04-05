@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "delivery-service")
 public interface DeliveryFeignClient {
 	@PostMapping("/internal/v1/deliveries")
-	UUID createDelivery(@RequestBody DeliveryRequestDto.Creation requestDto);
+	DeliveryResponseDto.CreateDelivery createDelivery(@RequestBody DeliveryRequestDto.Creation requestDto);
 }

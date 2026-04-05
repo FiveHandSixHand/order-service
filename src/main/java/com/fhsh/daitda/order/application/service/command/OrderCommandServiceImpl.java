@@ -13,6 +13,7 @@ import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.application.client.CompanyClient;
 import com.fhsh.daitda.order.application.client.DeliveryClient;
 import com.fhsh.daitda.order.application.client.HubInventoryClient;
+import com.fhsh.daitda.order.application.client.dto.CreateDeliveryClientResponse;
 import com.fhsh.daitda.order.application.command.OrderCreateCommand;
 import com.fhsh.daitda.order.application.command.OrderItemCommand;
 import com.fhsh.daitda.order.application.command.RestoreHubInventoryCommand;
@@ -21,6 +22,8 @@ import com.fhsh.daitda.order.domain.exception.OrderErrorCode;
 import com.fhsh.daitda.order.domain.entity.Order;
 import com.fhsh.daitda.order.domain.repository.OrderRepository;
 import com.fhsh.daitda.order.domain.vo.OrderItemInfo;
+import com.fhsh.daitda.order.infrastructure.external.slack.SlackFeignClient;
+import com.fhsh.daitda.order.infrastructure.external.slack.dto.CreateSlackRequest;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +36,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	private final CompanyClient companyClient;
 	private final HubInventoryClient hubInventoryClient;
 	private final DeliveryClient deliveryClient;
+	private final SlackFeignClient slackFeignClient; //todo: 의존도 낮춰야 함
 
 	@Transactional
 	public OrderCreateResult createOrder(UUID userId, OrderCreateCommand orderCreateCommand) {
@@ -57,14 +61,15 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
 		orderRepository.save(order);
 
-		UUID deliveryId = null;
+		CreateDeliveryClientResponse deliveryInfo = null;
 		try {
-			deliveryId = deliveryClient.createDelivery(order.getOrderId(), supplierCompanyId, receiverCompanyId);
+			deliveryInfo = deliveryClient.createDelivery(order.getOrderId(), supplierCompanyId, receiverCompanyId);
 		} catch (FeignException e) {
 			restoreInventory(order);
 			throw new BusinessException(OrderErrorCode.DELIVERY_SERVICE_ERROR);
 		}
-		order.complete(deliveryId);
+		order.complete(deliveryInfo.deliveryId());
+		slackFeignClient.createSlack(new CreateSlackRequest(order.getOrderId(), deliveryInfo.deliveryManagerId()));
 
 		return OrderCreateResult.from(order);
 	}

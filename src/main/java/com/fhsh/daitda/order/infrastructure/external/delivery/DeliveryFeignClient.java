@@ -1,4 +1,4 @@
-package com.fhsh.daitda.order.infrastructure.external;
+package com.fhsh.daitda.order.infrastructure.external.delivery;
 
 import java.util.UUID;
 

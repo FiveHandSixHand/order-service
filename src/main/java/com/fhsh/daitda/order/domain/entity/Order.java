@@ -29,28 +29,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "p_order")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseUserEntity {
-	@Getter
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Id
 	private UUID orderId;
-	@Getter
 	private UUID supplierCompanyId;
-	@Getter
 	private UUID receiverCompanyId;
-	@Getter
 	@Column(name = "user_id")
 	private UUID ordererId;
 	private UUID deliveryId;
 
-	@Getter
 	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<OrderItem> orderItems = new ArrayList<>();
 
-	@Getter
 	@Enumerated(EnumType.STRING)
 	private OrderStatus orderStatus;
 	@Embedded
@@ -122,6 +117,10 @@ public class Order extends BaseUserEntity {
 
 	public void cancel() {
 		this.orderStatus = OrderStatus.CANCELLED;
+	}
+
+	public String getRequestMsg() {
+		return this.orderRequest.requestMessage();
 	}
 
 	public List<OrderItemInfo> getOrderItemInfo() {

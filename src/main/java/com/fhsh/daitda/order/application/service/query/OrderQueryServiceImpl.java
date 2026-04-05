@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.application.result.GetOrderDetailsResult;
+import com.fhsh.daitda.order.application.result.GetOrderInternalResult;
 import com.fhsh.daitda.order.application.result.GetOrdersResult;
 import com.fhsh.daitda.order.domain.exception.OrderErrorCode;
 import com.fhsh.daitda.order.domain.entity.Order;
@@ -68,6 +69,24 @@ public class OrderQueryServiceImpl implements OrderQueryService{
 			order.getOrderStatus(),
 			order.getCreatedAt(),
 			itemResults
+		);
+	}
+
+	//internal
+	@Override
+	public GetOrderInternalResult getOrder(UUID orderId) {
+
+		Order order = orderRepository.findById(orderId).orElseThrow(
+			() -> new BusinessException(OrderErrorCode.NOT_FOUND_ORDER)
+		);
+
+		return new GetOrderInternalResult(
+			order.getOrderId(),
+			order.getOrdererId(),
+			order.getCreatedAt(),
+			order.getOrderItemInfo(),
+			order.getRequestMsg(),
+			order.getDeliveryId()
 		);
 	}
 }

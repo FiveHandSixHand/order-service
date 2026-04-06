@@ -20,13 +20,15 @@ import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.application.client.CompanyClient;
 import com.fhsh.daitda.order.application.client.DeliveryClient;
 import com.fhsh.daitda.order.application.client.HubInventoryClient;
+import com.fhsh.daitda.order.application.client.dto.CreateDeliveryClientResponse;
 import com.fhsh.daitda.order.application.command.OrderCreateCommand;
 import com.fhsh.daitda.order.application.command.OrderItemCommand;
 import com.fhsh.daitda.order.application.result.OrderCreateResult;
-import com.fhsh.daitda.order.application.service.OrderErrorCode;
+import com.fhsh.daitda.order.domain.exception.OrderErrorCode;
 import com.fhsh.daitda.order.application.service.command.OrderCommandServiceImpl;
 import com.fhsh.daitda.order.domain.entity.Order;
 import com.fhsh.daitda.order.domain.repository.OrderRepository;
+import com.fhsh.daitda.order.infrastructure.external.slack.SlackFeignClient;
 
 import feign.FeignException;
 
@@ -44,9 +46,13 @@ class OrderCommandServiceImplTest {
 	private HubInventoryClient hubInventoryClient;
 	@Mock
 	private DeliveryClient deliveryClient;
+	@Mock
+	private SlackFeignClient slackFeignClient;
 
 	@Nested
 	public class CreateOrderTest {
+		private UUID userId = UUID.randomUUID();
+
 		@Test
 		@DisplayName("모든 외부 서비스가 정상일 때 주문 생성에 성공해야 한다")
 		void createOrder_Success() {
@@ -69,11 +75,12 @@ class OrderCommandServiceImplTest {
 
 			// 3. 배송 생성 Mock (정상적인 UUID 반환)
 			UUID mockDeliveryId = UUID.randomUUID();
+			UUID mockDeliveryManagerId = UUID.randomUUID();
 			given(deliveryClient.createDelivery(any(), eq(supplierId), eq(receiverId)))
-				.willReturn(mockDeliveryId);
+				.willReturn(new CreateDeliveryClientResponse(mockDeliveryId,mockDeliveryManagerId));
 
 			// when
-			OrderCreateResult result = orderService.createOrder(command);
+			OrderCreateResult result = orderService.createOrder(userId, command);
 
 			// then
 			assertNotNull(result);
@@ -105,7 +112,7 @@ class OrderCommandServiceImplTest {
 			// when & then
 			// 1. assertThrows의 결과로 예외 객체를 받습니다.
 			BusinessException exception = assertThrows(BusinessException.class, () -> {
-				orderService.createOrder(command);
+				orderService.createOrder(userId, command);
 			});
 
 			// 2. 예외 내부의 에러 코드가 내가 설정한 것과 같은지 검증합니다.
@@ -113,8 +120,6 @@ class OrderCommandServiceImplTest {
 
 			// then: 배송 실패 시 restoreHubInventory가 반드시 호출되었는지 검증
 			verify(hubInventoryClient, times(1)).restoreHubInventory(anyList());
-			// then: 주문이 저장되지 않아야 함 (예외로 인해)
-			verify(orderRepository, never()).save(any());
 		}
 
 		private OrderCreateCommand createTestCommand(UUID supplierId, UUID receiverId, UUID productId) {

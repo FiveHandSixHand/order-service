@@ -1,5 +1,7 @@
 package com.fhsh.daitda.order.domain.entity;
 
+import static com.fhsh.daitda.order.domain.exception.OrderErrorCode.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.fhsh.daitda.domain.BaseUserEntity;
+import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.domain.enums.OrderStatus;
 import com.fhsh.daitda.order.domain.vo.OrderItemInfo;
 
@@ -26,11 +29,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "p_order")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseUserEntity {
-	@Getter
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Id
 	private UUID orderId;
@@ -40,7 +43,6 @@ public class Order extends BaseUserEntity {
 	private UUID ordererId;
 	private UUID deliveryId;
 
-	@Getter
 	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<OrderItem> orderItems = new ArrayList<>();
 
@@ -100,5 +102,30 @@ public class Order extends BaseUserEntity {
 
 	public void deleteOrder(UUID ordererId) {
 		super.delete(ordererId.toString());
+	}
+
+	public boolean checkOrderer(UUID userId) {
+		if(!this.ordererId.equals(userId)) {
+			throw new BusinessException(NOT_MATCH_ORDERER);
+		}
+		return true;
+	}
+
+	public boolean checkStatus() {
+		return this.orderStatus.validateCanCancel();
+	}
+
+	public void cancel() {
+		this.orderStatus = OrderStatus.CANCELLED;
+	}
+
+	public String getRequestMsg() {
+		return this.orderRequest.requestMessage();
+	}
+
+	public List<OrderItemInfo> getOrderItemInfo() {
+		return this.orderItems.stream().map(
+			item -> item.getOrderItemInfo()
+		).toList();
 	}
 }

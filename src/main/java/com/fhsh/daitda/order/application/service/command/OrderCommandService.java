@@ -6,6 +6,7 @@ import com.fhsh.daitda.order.application.command.OrderCreateCommand;
 import com.fhsh.daitda.order.application.result.OrderCreateResult;
 
 public interface OrderCommandService {
-	OrderCreateResult createOrder(OrderCreateCommand orderCreateCommand);
+	OrderCreateResult createOrder(UUID userId, OrderCreateCommand orderCreateCommand);
 	void deleteOrder(UUID userId, UUID orderId);
+	void cancelOrder(UUID userId, UUID orderId);
 }

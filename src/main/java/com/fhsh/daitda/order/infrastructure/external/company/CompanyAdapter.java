@@ -1,4 +1,4 @@
-package com.fhsh.daitda.order.infrastructure.external;
+package com.fhsh.daitda.order.infrastructure.external.company;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +17,6 @@ public class CompanyAdapter implements CompanyClient{
 
 	@Override
 	public Map<UUID, String> getProductNames(UUID supplierCompanyId, List<UUID> productIds) {
-		return companyFeignClient.getProductNames(supplierCompanyId, productIds);
+		return companyFeignClient.getProductNames(supplierCompanyId, productIds).getData();
 	}
 }

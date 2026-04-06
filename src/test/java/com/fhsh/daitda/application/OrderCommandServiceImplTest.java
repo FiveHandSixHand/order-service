@@ -20,6 +20,7 @@ import com.fhsh.daitda.exception.BusinessException;
 import com.fhsh.daitda.order.application.client.CompanyClient;
 import com.fhsh.daitda.order.application.client.DeliveryClient;
 import com.fhsh.daitda.order.application.client.HubInventoryClient;
+import com.fhsh.daitda.order.application.client.dto.CreateDeliveryClientResponse;
 import com.fhsh.daitda.order.application.command.OrderCreateCommand;
 import com.fhsh.daitda.order.application.command.OrderItemCommand;
 import com.fhsh.daitda.order.application.result.OrderCreateResult;
@@ -27,6 +28,7 @@ import com.fhsh.daitda.order.domain.exception.OrderErrorCode;
 import com.fhsh.daitda.order.application.service.command.OrderCommandServiceImpl;
 import com.fhsh.daitda.order.domain.entity.Order;
 import com.fhsh.daitda.order.domain.repository.OrderRepository;
+import com.fhsh.daitda.order.infrastructure.external.slack.SlackFeignClient;
 
 import feign.FeignException;
 
@@ -44,6 +46,8 @@ class OrderCommandServiceImplTest {
 	private HubInventoryClient hubInventoryClient;
 	@Mock
 	private DeliveryClient deliveryClient;
+	@Mock
+	private SlackFeignClient slackFeignClient;
 
 	@Nested
 	public class CreateOrderTest {
@@ -71,8 +75,9 @@ class OrderCommandServiceImplTest {
 
 			// 3. 배송 생성 Mock (정상적인 UUID 반환)
 			UUID mockDeliveryId = UUID.randomUUID();
+			UUID mockDeliveryManagerId = UUID.randomUUID();
 			given(deliveryClient.createDelivery(any(), eq(supplierId), eq(receiverId)))
-				.willReturn(mockDeliveryId);
+				.willReturn(new CreateDeliveryClientResponse(mockDeliveryId,mockDeliveryManagerId));
 
 			// when
 			OrderCreateResult result = orderService.createOrder(userId, command);

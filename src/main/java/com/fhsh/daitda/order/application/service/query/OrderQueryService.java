@@ -7,7 +7,6 @@ import org.springframework.data.domain.Slice;
 
 import com.fhsh.daitda.order.application.result.GetOrderDetailsResult;
 import com.fhsh.daitda.order.application.result.GetOrderInternalResult;
-import com.fhsh.daitda.order.application.result.GetOrdersResult;
 import com.fhsh.daitda.order.domain.entity.Order;
 
 public interface OrderQueryService {

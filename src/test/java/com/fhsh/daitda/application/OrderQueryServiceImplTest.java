@@ -21,7 +21,6 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fhsh.daitda.exception.BusinessException;
-import com.fhsh.daitda.order.application.result.GetOrdersResult;
 import com.fhsh.daitda.order.domain.exception.OrderErrorCode;
 import com.fhsh.daitda.order.application.service.query.OrderQueryService;
 import com.fhsh.daitda.order.application.service.query.OrderQueryServiceImpl;
@@ -52,7 +51,7 @@ class OrderQueryServiceImplTest {
 	void getOrders_success() {
 		// given
 		UUID userId = UUID.randomUUID();
-		String authRole = "MASTER";
+		String authRole = "ADMIN";
 		Pageable pageable = PageRequest.of(0, 10);
 		UUID supplierId = UUID.randomUUID();
 		UUID receiverId = UUID.randomUUID();
@@ -72,13 +71,13 @@ class OrderQueryServiceImplTest {
 		when(orderStrategy.fetch(userId, pageable)).thenReturn(mockSlice);
 
 		// when
-		GetOrdersResult result = orderQueryService.getOrders(userId, authRole, pageable);
+		Slice<Order> result = orderQueryService.getOrders(userId, authRole, pageable);
 
 		// then
 		assertThat(result).isNotNull();
-		assertThat(result.results())
+		assertThat(result.getContent())
 			.hasSize(1)
-			.extracting("supplierCompanyId", "status") // 확인하고 싶은 필드만 추출
+			.extracting("supplierCompanyId", "orderStatus") // 확인하고 싶은 필드만 추출
 			.containsExactly(
 				tuple(supplierId, status) // 기대하는 값들과 일치하는지 한 번에 확인
 			);

@@ -22,7 +22,7 @@ public class DeliveryAdapter implements DeliveryClient {
 			DeliveryResponseDto.CreateDelivery delivery = deliveryFeignClient.createDelivery(requestDto).getData();
 			return new CreateDeliveryClientResponse(
 				delivery.deliveryId(),
-				delivery.deliveryManagersId()
+				delivery.deliveryManagerId()
 			);
 		} catch (FeignException e) {
 			throw e;

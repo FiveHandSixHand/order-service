@@ -1,8 +1,10 @@
 package com.fhsh.daitda.order.presentation;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fhsh.daitda.order.application.command.OrderCreateCommand;
 import com.fhsh.daitda.order.application.result.GetOrderDetailsResult;
-import com.fhsh.daitda.order.application.result.GetOrdersResult;
 import com.fhsh.daitda.order.application.result.OrderCreateResult;
+import com.fhsh.daitda.order.application.result.OrderResult;
 import com.fhsh.daitda.order.application.service.command.OrderCommandService;
 import com.fhsh.daitda.order.application.service.query.OrderQueryService;
+import com.fhsh.daitda.order.domain.entity.Order;
+import com.fhsh.daitda.order.presentation.dto.PageResponse;
 import com.fhsh.daitda.response.CommonResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -43,12 +47,19 @@ public class OrderController {
 	}
 
 	@GetMapping
-	public ResponseEntity<CommonResponse<GetOrdersResult>> getOrders(
+	public ResponseEntity<CommonResponse<PageResponse<OrderResult>>> getOrders(
 		@RequestHeader("X-User-Id") UUID userId,
 		@RequestHeader("X-User-Role") String auth,
 		@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-		GetOrdersResult result = orderQueryService.getOrders(userId, auth, pageable);
-		return ResponseEntity.ok(CommonResponse.success(result));
+		Slice<Order> orders = orderQueryService.getOrders(userId, auth, pageable);
+		List<OrderResult> ordersResult = orders.stream().map(order -> new OrderResult(
+			order.getSupplierCompanyId(),
+			order.getReceiverCompanyId(),
+			order.getOrdererId(),
+			order.getOrderStatus(),
+			order.getCreatedAt())).toList();
+		PageResponse<OrderResult> res = new PageResponse<>(orders.hasNext(), ordersResult);
+		return ResponseEntity.ok(CommonResponse.success(res));
 	}
 
 	@GetMapping("/{orderId}")

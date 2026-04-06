@@ -9,7 +9,7 @@ import com.fhsh.daitda.response.CommonResponse;
 
 @FeignClient(name = "hub-service")
 public interface HubInventoryFeignClient{
-	@PatchMapping("/internal/v1/hub-inventories/decrease")
+	@PatchMapping("/internal/v1/hub-inventories/decrease-by-product")
 	CommonResponse<HubInventoryResponseDto.Decrease> decreaseHubInventory(@RequestBody HubInventoryRequestDto.Decrease requestDto);
 	@PatchMapping("/internal/v1/hub-inventories/restoration")
 	CommonResponse<Void> restoreHubInventory(@RequestBody HubInventoryRequestDto.Restoration requestDto);

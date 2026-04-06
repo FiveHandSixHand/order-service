@@ -3,13 +3,16 @@ package com.fhsh.daitda.order.infrastructure.external.hub;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class HubInventoryRequestDto {
 	public record Decrease(
 		UUID supplierCompanyId,
-		List<Item> items
+		List<Item> orderItems
 	) {}
 
 	public record Restoration(
+		@JsonProperty("orderItems")
 		List<RestoreItem> restoreItems
 	) {}
 

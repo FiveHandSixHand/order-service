@@ -8,20 +8,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class HubInventoryRequestDto {
 	public record Decrease(
 		UUID supplierCompanyId,
-		List<Item> orderItems
+		@JsonProperty("orderItems") List<Item> items
 	) {}
 
 	public record Restoration(
-		@JsonProperty("orderItems")
-		List<RestoreItem> restoreItems
+		@JsonProperty("orderItems") List<RestoreItem> restoreItems
 	) {}
 
-	protected record Item(
+	public record Item(
 		UUID productId,
 		int quantity
 	) {}
 
-	protected record RestoreItem(
+	public record RestoreItem(
 		UUID hubInventoryId,
 		int quantity
 	) {}

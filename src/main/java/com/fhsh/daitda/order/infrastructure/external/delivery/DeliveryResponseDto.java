@@ -13,7 +13,7 @@ public class DeliveryResponseDto {
 		 String senderTenantAddress,
 		 String receiverTenantAddress,
 		 UUID receiverId,
-		 UUID deliveryManagersId,
+		 UUID deliveryManagerId,
 		 LocalDateTime createdAt
 	) {}
 }

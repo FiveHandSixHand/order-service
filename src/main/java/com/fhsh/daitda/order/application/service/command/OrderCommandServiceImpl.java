@@ -69,7 +69,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 			throw new BusinessException(OrderErrorCode.DELIVERY_SERVICE_ERROR);
 		}
 		order.complete(deliveryInfo.deliveryId());
-		slackFeignClient.createSlack(new CreateSlackRequest(order.getOrderId(), deliveryInfo.deliveryManagerId()));
+		slackFeignClient.createSlack(new CreateSlackRequest(order.getOrderId(), deliveryInfo.deliveryManagerId())); //todo: error처리
 
 		return OrderCreateResult.from(order);
 	}

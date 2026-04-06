@@ -19,7 +19,7 @@ public class DeliveryAdapter implements DeliveryClient {
 		try {
 			DeliveryRequestDto.Creation requestDto = new DeliveryRequestDto.Creation(orderId, supplierCompanyId,
 				receiverCompanyId);
-			DeliveryResponseDto.CreateDelivery delivery = deliveryFeignClient.createDelivery(requestDto);
+			DeliveryResponseDto.CreateDelivery delivery = deliveryFeignClient.createDelivery(requestDto).getData();
 			return new CreateDeliveryClientResponse(
 				delivery.deliveryId(),
 				delivery.deliveryManagersId()

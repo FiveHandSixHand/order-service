@@ -38,7 +38,7 @@ ext {
 
 
 dependencies {
-	implementation 'com.fhsh.daitda:common:0.1.1-SNAPSHOT'
+	implementation 'com.fhsh.daitda:common:0.1.4-SNAPSHOT'
 //	DB 연결 후 사용
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -48,6 +48,8 @@ dependencies {
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	implementation 'io.github.openfeign:feign-hc5'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'

@@ -101,7 +101,7 @@ public class Order extends BaseUserEntity {
 	}
 
 	public void deleteOrder(UUID ordererId) {
-		super.delete(ordererId.toString());
+		super.delete(ordererId);
 	}
 
 	public boolean checkOrderer(UUID userId) {
